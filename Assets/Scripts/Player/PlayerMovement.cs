@@ -6,8 +6,8 @@ public class PlayerMovement : MonoBehaviour
 {
     public float speed = 10;
     public float rotateSpeed = 7;
-    public Animator anim;
 
+    private Animator anim;
     private float yaw = 0;
 
     // Start is called before the first frame update
