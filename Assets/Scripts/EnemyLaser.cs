@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyLaser : MonoBehaviour
 {
     public float damageAmount = 0;
+    public string targetTag;
 
     // Start is called before the first frame update
     void Start()

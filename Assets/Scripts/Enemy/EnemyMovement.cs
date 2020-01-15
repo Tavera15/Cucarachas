@@ -10,6 +10,8 @@ public class EnemyMovement : MonoBehaviour
 
     private EnemyShooting enemyShooting;
     private Animator anim;
+    private bool canMove = true;
+    private float stunTimer = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -21,18 +23,26 @@ public class EnemyMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Enemy will always face the player and approach them. 
+        // If enemy is within shooting range, enemy will attack player.
         LookAtPlayer();
         bool isEnemyInRange = Vector3.Distance(transform.position, player.position) <= shootDitance;
 
-        if (isEnemyInRange)
+        if (isEnemyInRange && canMove)
         {
             anim.SetBool("isMoving", false);
             enemyShooting.Shoot();
         }
-        else
+        else if(canMove == true)
         {
             MoveTowardsPlayer();
         }
+
+        // If enemy is stun, decrease the timer to reset enemy movement
+        if (stunTimer <= 0)
+            canMove = true;
+
+        stunTimer -= Time.deltaTime;
     }
 
     // Update the rotation to face the player
@@ -46,5 +56,12 @@ public class EnemyMovement : MonoBehaviour
     {
         transform.position = Vector3.Lerp(transform.position, player.position, speed * Time.deltaTime);
         anim.SetBool("isMoving", true);
+    }
+
+    // Enemies won't move nor attack for a specified duration
+    public void EnemyStun(float duration)
+    {
+        canMove = false;
+        stunTimer = duration;
     }
 }

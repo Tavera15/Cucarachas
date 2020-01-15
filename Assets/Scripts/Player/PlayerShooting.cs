@@ -15,10 +15,14 @@ public class PlayerShooting : MonoBehaviour
     public float maxDegreesToRotate = 25.0f;                // How far to rotate gun vertically
     public float attackDamage = 10;                         // How much damage the bullet will inflict
 
+    private float initialAttackDamage;
+    private float powerUpTimer = 0;
+
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        initialAttackDamage = attackDamage;
     }
 
     // Update is called once per frame
@@ -26,6 +30,11 @@ public class PlayerShooting : MonoBehaviour
     {
         GunVerticalMovement();
         SpawnBullet();
+
+        if(powerUpTimer <= 0)
+            attackDamage = initialAttackDamage;
+
+        powerUpTimer -= Time.deltaTime;
     }
 
     void GunVerticalMovement()
@@ -45,7 +54,7 @@ public class PlayerShooting : MonoBehaviour
         crosshair.GetComponent<Image>().color = (Physics.Raycast(ray, out hit, raycastMaxDistance) 
             && hit.collider.tag == "Enemy" ? Color.red : Color.white);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetMouseButtonDown(0))
         {
             // Instantiate bullet and apply implusive force to launch it towards the crosshair
             var bulletInstance = Instantiate(bullet, gunBarrel.transform.position, transform.rotation);
@@ -53,13 +62,20 @@ public class PlayerShooting : MonoBehaviour
             bulletInstance.GetComponent<Rigidbody>().AddForce(direction * shootForce, ForceMode.Impulse);
 
             // Apply damage to enemies
-            if (hit.collider.tag == "Enemy")
+            if (Physics.Raycast(ray, out hit, raycastMaxDistance) && hit.collider.tag == "Enemy")
             {
-                hit.collider.gameObject.GetComponent<EnemyHealth>().ReceiveDamage(attackDamage);
+                hit.collider.GetComponent<EnemyHealth>().ReceiveDamage(attackDamage);
+                Destroy(bulletInstance);
             }
 
             // Destroy bullet instance
             Destroy(bulletInstance, 2f);
         }
+    }
+
+    public void buffShootingPower(float amountToIncreaseBy, float duration)
+    {
+        attackDamage += amountToIncreaseBy;
+        powerUpTimer = duration;
     }
 }
