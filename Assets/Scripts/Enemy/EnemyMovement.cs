@@ -9,6 +9,7 @@ public class EnemyMovement : MonoBehaviour
     public float shootDitance = 7;              // Distance between enemy and player before enemy starts shooting
 
     private EnemyShooting enemyShooting;
+    private EnemyHealth enemyHealth;
     private Animator anim;
     private bool canMove = true;
     private float stunTimer = 0;
@@ -18,6 +19,7 @@ public class EnemyMovement : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         enemyShooting = GetComponent<EnemyShooting>();
+        enemyHealth = GetComponent<EnemyHealth>();
     }
 
     // Update is called once per frame
@@ -28,12 +30,12 @@ public class EnemyMovement : MonoBehaviour
         LookAtPlayer();
         bool isEnemyInRange = Vector3.Distance(transform.position, player.position) <= shootDitance;
 
-        if (isEnemyInRange && canMove)
+        if (isEnemyInRange && canMove && enemyHealth.health > 0)
         {
             anim.SetBool("isMoving", false);
             enemyShooting.Shoot();
         }
-        else if(canMove == true)
+        else if(canMove == true && enemyHealth.health > 0)
         {
             MoveTowardsPlayer();
         }

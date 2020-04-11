@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class CameraComp : MonoBehaviour
 {
-    public float maxDegreesDelta = 15f;
-    public float rotateSpeed = 10;
     public float maxDegreesToRotate = 25.0f;
-
+    
     void Start()
     {
 

@@ -28,7 +28,8 @@ public class EnemyHealth : MonoBehaviour
 
         if(health <= 0)
         {
-            Destroy(gameObject);
+            // TODO Find a death animation
+            Destroy(gameObject, 2f);
         }
     }
 }

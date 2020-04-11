@@ -12,6 +12,7 @@ public class Powerup_SO : ScriptableObject
     public float amount;
     public float duration;
     public Sprite image;
+    public Color blinkColor;
     // TODO Maybe add a color so screen blinks when a buff is picked up
 
     // Find a way to only display certain variables when a certain enum is selected on the editor

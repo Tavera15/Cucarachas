@@ -17,3 +17,4 @@ MonoBehaviour:
   amount: 25
   duration: 0
   image: {fileID: 0}
+  blinkColor: {r: 1, g: 0.49045783, b: 0, a: 0.39215687}

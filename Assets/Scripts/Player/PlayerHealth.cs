@@ -9,7 +9,7 @@ public class PlayerHealth : MonoBehaviour
     public float health = 100;
     public bool isImmune = false;
     public Image screenBlink;                                       // Reference to image on screen to blink when damaged
-    public Color blinkColor = new Color(255, 0, 0, 100f);           // Color to flash when player is hurt
+    public Color damageFlash = new Color(255, 0, 0, 100f);          // Color to flash when player is hurt
     public float immunityDuration = 1.5f;
     public Image healthBar;
     public float lastHitImmunityTimer = 1.5f;
@@ -50,14 +50,13 @@ public class PlayerHealth : MonoBehaviour
 
         isImmune = true;                                    // Player will be immune to attacks for a duration
         health -= amount;                                   // Decrease health
-        screenBlink.color = blinkColor;                     // Change the screen color to "blink"
+        FlashScreen(damageFlash);                           // Change the screen color to "blink"
         immunityTimer = lastHitImmunityTimer;               // Reset lastHitTime timer
     }
 
     public void IncreaseHealth(float amount)
     {
         health = Mathf.Clamp(health + amount, 0, 100);      // Health can only be between 0 and 100
-        screenBlink.color = new Color(0, 255, 0, .4f);      // Screen will blink green when healed
     }
 
     /// <summary>
@@ -68,6 +67,10 @@ public class PlayerHealth : MonoBehaviour
     {
         isImmune = true;
         immunityTimer = duration;
-        screenBlink.color = new Color(0, 0, 255, .4f);
+    }
+
+    public void FlashScreen(Color flashColor)
+    {
+        screenBlink.color = flashColor;
     }
 }

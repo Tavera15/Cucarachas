@@ -7,7 +7,6 @@ public class PlayerBuff : MonoBehaviour
     private PlayerShooting playerShoot;
     private PlayerMovement playerMovement;
     private PlayerHealth playerHealth;
-
     private bool isCurrentlyBuffed = false;
     private float buffCooldown = 0;
 
@@ -16,9 +15,9 @@ public class PlayerBuff : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerHealth = GetComponent<PlayerHealth>();
         playerShoot = GetComponent<PlayerShooting>();
         playerMovement = GetComponent<PlayerMovement>();
-        playerHealth = GetComponent<PlayerHealth>();
     }
 
     // Update is called once per frame
@@ -63,5 +62,8 @@ public class PlayerBuff : MonoBehaviour
         // Prevent player from stacking buffs
         buffCooldown += (powerUp.duration + additionalBuffDelay);
         isCurrentlyBuffed = true;
+
+        // Change the screen color to "blink"
+        playerHealth.FlashScreen(powerUp.blinkColor);
     }
 }

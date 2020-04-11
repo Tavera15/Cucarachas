@@ -94,6 +94,8 @@ public class PlayerMovement : MonoBehaviour
             if (rb != null && hit.gameObject.tag == "Enemy")
             {
                 hit.gameObject.GetComponent<EnemyMovement>().EnemyStun(2);
+                hit.gameObject.GetComponent<EnemyHealth>().ReceiveDamage(70);
+
                 rb.AddExplosionForce(pulsePower, explosionPos, radius, 1f, ForceMode.Impulse);
             }
         }

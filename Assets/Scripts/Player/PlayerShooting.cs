@@ -6,18 +6,15 @@ using UnityEngine.UI;
 public class PlayerShooting : MonoBehaviour
 {
     public GameObject gun;
-    public GameObject gunBarrel;
-    public GameObject bullet;                               // Bullet to instatiate
     public GameObject crosshair;
     public Camera cam;
-    public float shootForce = 10;                           // The amount of force the bullet will travel
-    public float raycastMaxDistance = 100000.0f;            // How far the raycast will travel
-    public float maxDegreesToRotate = 25.0f;                // How far to rotate gun vertically
-    public float attackDamage = 10;                         // How much damage the bullet will inflict
+    public float raycastMaxDistance = 100000.0f;    // How far the raycast will travel to apply damage to enemies
+    public float maxDegreesToRotate = 25.0f;        // How far to rotate gun vertically
+    public float attackDamage = 10;                 // How much damage the bullet will inflict
+    public ParticleSystem fireParticle;             // Particle to play when gun is shooting
 
     private float initialAttackDamage;
     private float powerUpTimer = 0;
-
 
     // Start is called before the first frame update
     void Start()
@@ -29,11 +26,13 @@ public class PlayerShooting : MonoBehaviour
     void Update()
     {
         GunVerticalMovement();
-        SpawnBullet();
+        Shoot();
 
+        // if player has a power buff, reset to normal stats after timer is complete
         if(powerUpTimer <= 0)
             attackDamage = initialAttackDamage;
 
+        // Decrease the timer for attack buff above
         powerUpTimer -= Time.deltaTime;
     }
 
@@ -44,7 +43,7 @@ public class PlayerShooting : MonoBehaviour
         gun.transform.localRotation = Quaternion.Euler(new Vector3(-10, 90, -1f * (mouseY * maxDegreesToRotate)));
     }
 
-    void SpawnBullet()
+    void Shoot()
     {
         // Setup Raycast using crosshair on screen
         RaycastHit hit;
@@ -56,20 +55,13 @@ public class PlayerShooting : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            // Instantiate bullet and apply implusive force to launch it towards the crosshair
-            var bulletInstance = Instantiate(bullet, gunBarrel.transform.position, transform.rotation);
-            Vector3 direction = (ray.GetPoint(raycastMaxDistance) - bulletInstance.transform.position).normalized;
-            bulletInstance.GetComponent<Rigidbody>().AddForce(direction * shootForce, ForceMode.Impulse);
+            fireParticle.Play();
 
             // Apply damage to enemies
             if (Physics.Raycast(ray, out hit, raycastMaxDistance) && hit.collider.tag == "Enemy")
             {
                 hit.collider.GetComponent<EnemyHealth>().ReceiveDamage(attackDamage);
-                Destroy(bulletInstance);
             }
-
-            // Destroy bullet instance
-            Destroy(bulletInstance, 2f);
         }
     }
 
